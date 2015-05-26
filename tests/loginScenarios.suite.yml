@@ -1,0 +1,13 @@
+class_name: LoginScenariosTester
+modules:
+    enabled:
+        - PhpBrowser
+        - LoginScenariosHelper
+        - WebDriver
+    config:
+        PhpBrowser:
+            url: 'http://alon.kaltura.com/'
+        WebDriver:
+            url: 'http://alon.kaltura.com/'
+            browser: 'chrome'
+            window_size: maximize

@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en" style="" class=" js canvas no-touch history cssanimations cssgradients csstransforms csstransforms3d csstransitions video audio localstorage formvalidation"><head>
+<!-- viewhook start modulesHeader -->
+
+<!-- viewhook end modulesHeader --><meta name="xsrf-ajax-nonce" content="PsQvCJatH5KzLZKF+EBaKn9S4FjtwbtJE05JC/Po8fk8IzlkfKldXWn3f8+1yayTV9urap3ipl35wI+ITHjYTQ==" />
+<meta name="xsrf-ajax-nonce" content="WeGdOGyqxiC9yWaMANN6s5Nre6zQKLCLsiewMT+sAJoUGwLVEddQ/xPhq3JBJ0e1SN0PX5nYevKYiWSl8+uhuw==" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="requiresActiveX=true" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Login - MediaSpace</title>
+
+<!--[if lt IE 9]> <style type="text/css" media="screen">
+body{-ms-overflow-y : scroll;}
+</style><![endif]--><link href="build0/consolidated/95a884b47d0b98803c9964a9d8c503da.css" media="screen" rel="stylesheet" type="text/css" /><link href="/build0/favicon.ico" rel="icon" type="png" /><!--[if lt IE 10]> <link href="/build0/css/ieadditions.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><!--[if IE 7]> <link href="/build0/fontAwesome/font-awesome-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><!--[if IE 7]> <link href="/build0/css/bootstrap-ie7buttonfix.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><!--[if IE 8]> <link href="/build0/css/bootstrap-ie8buttonfix.css" media="screen" rel="stylesheet" type="text/css" /><![endif]--><script type="text/javascript" async="" src="http://s3.amazonaws.com/totango-cdn/totango2.js"></script><script type="text/javascript">
+    //&lt;![CDATA[
+    var baseUrl = "";
+    // kdp ready callbacks    
+    var KmsJsCallbackReady = {};
+    // kms analytics flag
+            var Kms_Analytics_Active = true;
+        //]]&gt;
+</script><script type="text/javascript">
+    //&lt;![CDATA[
+
+    window.totango = {go: function(){return -1}, track: function(){}, identify: function(){}, setAccountAttributes: function(){}};
+    (function() {
+        var e = document.createElement('script'); e.type = 'text/javascript'; e.async = true;
+        e.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 's3.amazonaws.com/totango-cdn/totango2.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(e, s);
+    })();
+    //]]&gt;
+</script><script type="text/javascript" src="build0/consolidated/cab67028e4e921ae43826b25e2799758.js"></script><style type="text/css"></style><script type="text/javascript" src="http://cdnapi.kaltura.com/p/1870231/sp/187023100/embedIframeJs/uiconf_id/27762851/partner_id/1870231"></script><script type="text/javascript">
+    //&lt;![CDATA[
+window.kms_kWidgetJsLoader_baseurl = "http:\/\/cdnapi.kaltura.com\/p\/((PARTNER_ID))\/sp\/((PARTNER_ID))00\/embedIframeJs\/uiconf_id\/((PLAYER_ID))\/partner_id\/((PARTNER_ID))";window.kms_kWidgetJsLoader_partnerId = "1870231";if (typeof(kms_kWidgetJsLoader) == "undefined") {kms_kWidgetJsLoader_loadedElsewherePlayerId = "27762851";} else {kms_kWidgetJsLoader.loadedElsewhere("27762851");};    //]]&gt;
+</script><script type="text/javascript">
+    //&lt;![CDATA[
+
+    $(document).ready(function() {
+        $(document).on('kmsTrack', function(event, message) {
+            $.ajax({
+                 url:'/serveranalytics/index/analytics/msg/'+message
+            });
+
+        });
+    });    //]]&gt;
+</script><!--[if lt IE 10]> <script type="text/javascript" src="/build0/js/ieadditions.js"></script><![endif]--><!--[if lt IE 9]> <script type="text/javascript" src="/build0/js/html5.js"></script><![endif]--><!--[if lte IE 9]> <script type="text/javascript" src="/build0/js/jquery.placeholder.min.js"></script><![endif]--><script type="text/javascript">
+    //&lt;![CDATA[
+if (typeof(LOCALE) == 'object'){
+	var locale = {"Top":"Top","Back":"Back","* Required To Publish":"* Required To Publish","Press CTRL-C to copy":"Press CTRL-C to copy"};
+	jQuery.extend(LOCALE, locale);
+}
+else{
+	LOCALE = {"Top":"Top","Back":"Back","* Required To Publish":"* Required To Publish","Press CTRL-C to copy":"Press CTRL-C to copy"};
+}
+    //]]&gt;
+</script></head>
+
+<body class="login">
+<div id="kwrap" class="loginscreen wrapper limiter">
+         <div id="wrap" class="container">
+        
+<div class="row-fluid" id="content">
+    <div id="loginBox" class="well">
+                <h3 class="form-signin-heading">MediaSpace Sign In </h3>
+        		        
+		                    <form enctype="application/x-www-form-urlencoded" action="/user/authenticate" method="post">
+<div class="control-group">
+<input type="text" name="Login[username]" id="Login-username" value="" placeholder="User ID" class="input-xlarge" autofocus="autofocus" autocomplete="on" required="required" /></div>
+<div class="control-group">
+<input type="password" name="Login[password]" id="Login-password" value="" placeholder="Password" class="input-xlarge" autocomplete="on" required="required" /></div>
+
+<input type="hidden" name="referrer" value="/" id="referrer" />
+<div class="form-actions">
+<button name="Login[login]" id="Login-login" type="submit" value="
+Sign in" buttons="danger info primary success warning inverse link" class="btn btn-large btn-primary" data-track="login">
+Sign in</button>
+<a href="mailto:admin@example.com?subject=MediaSpace password reminder request&amp;body=Please send me a reminder" id="Login-forgot">Forgot Password?</a></div></form>            </div>
+</div>
+<script>
+    $(function(){
+        if (typeof(kms5main_disableFormSubmitCheckValidity) != 'undefined') kms5main_disableFormSubmitCheckValidity();
+    });
+</script>
+    </div>
+</div> 
+    <script>
+if (top != self)
+{
+    top.location=self.document.location;
+}
+</script>
+
+
+<div id="sidr" class="sidr navbar left"><div class="navbar-inner"></div></div></body></html>
