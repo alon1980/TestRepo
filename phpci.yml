@@ -1,0 +1,3 @@
+test:
+  codeception:
+    config: "codeception.yml"
