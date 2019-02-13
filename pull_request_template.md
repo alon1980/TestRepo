@@ -1,3 +1,4 @@
 testing pr tempalte
-[ ] need some work
-[ ] function test please!
+- [x] Finish my changes
+- [ ] Push my commits to GitHub
+- [ ] Open a pull request
