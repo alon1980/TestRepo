@@ -1,0 +1,52 @@
+name: a11y-parallel-storybook
+
+on:
+  workflow_dispatch:
+
+jobs:
+  a11y-test-run:
+    needs: [ prepare-spec-files ]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 64
+      matrix:
+        config:
+          [
+            {
+              type: 'desktop',
+              config: 'viewportWidth=1920,viewportHeight=1080',
+            },
+          ]
+        browser: [ chrome ]
+        specs: ["./cypress/e2e/a11y/storybookTests1.cy.js"]
+    container:
+      # Examples use latest tag
+      # For production use, to avoid the risk of breaking changes,
+      # choose a fixed version tag from
+      # https://hub.docker.com/r/cypress/browser/tags
+      image: cypress/browsers:latest
+      options: --user 1001
+
+    steps:
+      - name: Checkout Repo kms-react-e2e
+        uses: actions/checkout@v4
+
+      - name: My Awesome Cypress Tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: ${{ matrix.browser }}
+          config: ${{ matrix.config.config }}
+          spec: ${{ matrix.specs }}
+
+      - name: Generate report
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Failed on ${{matrix.browser}}-${{matrix.config.type}}
+          path: |
+            cypress/report/*
+            cypress/screenshots/*
+            cypress/videos/*
+
+
