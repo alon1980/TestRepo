@@ -48,19 +48,11 @@ jobs:
             exit 1
           fi
 
-      - name: Create release notes
-        id: release_notes
-        run: |
-          echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
-          echo "PR_LINK=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
-          echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
-
-          # Format release notes
-          release_notes="* ${{ github.event.pull_request.title }} - [PR Link](${{ github.event.pull_request.html_url }}) - created by ${{ github.event.pull_request.user.login }}"
-          echo "$release_notes" >> release_notes.md
-
-      - name: Create new release
+      - name: Create new release with auto-generated notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ env.next_tag }} --title "KMS SaaS ${{ env.next_tag }}" --notes-file release_notes.md
+          # Automatically generate release notes from PRs and commits
+          gh release create ${{ env.next_tag }} \
+            --title "KMS SaaS ${{ env.next_tag }}" \
+            --generate-notes
