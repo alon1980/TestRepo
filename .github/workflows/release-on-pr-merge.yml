@@ -18,14 +18,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install gh -y
 
-      - name: Authenticate GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GIT }}
-        run: |
-          echo $GITHUB_TOKEN | gh auth login --with-token
-
       - name: Get latest release
         id: get_latest_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GIT }}
         run: |
           # Get the latest release tag starting with 5.70.*
           latest_release=$(gh release list --limit 1 --json tagName --jq '.[] | select(.tagName | startswith("5.70.")) | .tagName')
@@ -35,7 +31,7 @@ jobs:
             echo "$latest_release" >> latest_tag.txt
           fi
           echo "Latest release: $(cat latest_tag.txt)"
-
+        
       - name: Calculate next release tag
         id: next_release_tag
         run: |
@@ -64,5 +60,7 @@ jobs:
           echo "$release_notes" >> release_notes.md
 
       - name: Create new release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{ env.next_tag }} --title "KMS SaaS ${{ env.next_tag }}" --notes-file release_notes.md
