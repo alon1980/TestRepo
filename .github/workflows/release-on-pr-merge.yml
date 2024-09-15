@@ -1,0 +1,58 @@
+name: Create Release on PR Merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  create_release:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Get the latest release
+        id: get_latest_release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const releases = await github.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            const latestRelease = releases.data.find(release => release.tag_name.startsWith('5.70.'));
+            if (!latestRelease) {
+              return { tag_name: '5.70.0' };
+            }
+
+            const lastTag = latestRelease.tag_name;
+            const tagParts = lastTag.split('.');
+            const nextPatchVersion = parseInt(tagParts[2], 10) + 1;
+            const nextTag = `5.70.${nextPatchVersion}`;
+            return { tag_name: nextTag };
+
+      - name: Create release notes
+        id: release_notes
+        run: |
+          echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
+          echo "PR_LINK=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
+          echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
+          echo "NEXT_RELEASE_TAG=${{ steps.get_latest_release.outputs.tag_name }}" >> $GITHUB_ENV
+
+          # Format release notes
+          echo "* ${{ env.PR_TITLE }} - [PR Link](${{ env.PR_LINK }}) - created by ${{ env.PR_AUTHOR }}" >> release_notes.md
+
+      - name: Create new release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.NEXT_RELEASE_TAG }}
+          release_name: "KMS SaaS ${{ env.NEXT_RELEASE_TAG }}"
+          body_path: ./release_notes.md
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GIT }}
