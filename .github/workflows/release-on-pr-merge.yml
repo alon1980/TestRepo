@@ -13,27 +13,38 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Get the latest release
-        id: get_latest_release
-        uses: actions/github-script@v6
+      - name: Set up GitHub CLI
+        uses: actions/setup-gh@v3
         with:
-          script: |
-            const releases = await github.repos.listReleases({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 100
-            });
+          token: ${{ secrets.TOKEN_GIT }}
 
-            const latestRelease = releases.data.find(release => release.tag_name.startsWith('5.70.'));
-            if (!latestRelease) {
-              return { tag_name: '5.70.0' };
-            }
+      - name: Get latest release
+        id: get_latest_release
+        run: |
+          # Get the latest release tag starting with 5.70.*
+          latest_release=$(gh release list --limit 1 --json tagName --jq '.[] | select(.tagName | startswith("5.70.")) | .tagName')
+          if [ -z "$latest_release" ]; then
+            echo "5.70.0" >> latest_tag.txt
+          else
+            echo "$latest_release" >> latest_tag.txt
+          fi
+          echo "Latest release: $(cat latest_tag.txt)"
 
-            const lastTag = latestRelease.tag_name;
-            const tagParts = lastTag.split('.');
-            const nextPatchVersion = parseInt(tagParts[2], 10) + 1;
-            const nextTag = `5.70.${nextPatchVersion}`;
-            return { tag_name: nextTag };
+      - name: Calculate next release tag
+        id: next_release_tag
+        run: |
+          # Split the latest release tag and increment the patch version
+          latest_tag=$(cat latest_tag.txt)
+          if [[ $latest_tag =~ ^5\.70\.([0-9]+)$ ]]; then
+            patch_version=${BASH_REMATCH[1]}
+            next_patch_version=$((patch_version + 1))
+            next_tag="5.70.${next_patch_version}"
+            echo "Next tag: $next_tag"
+            echo "next_tag=$next_tag" >> $GITHUB_ENV
+          else
+            echo "Failed to calculate next tag"
+            exit 1
+          fi
 
       - name: Create release notes
         id: release_notes
@@ -41,18 +52,7 @@ jobs:
           echo "PR_TITLE=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
           echo "PR_LINK=${{ github.event.pull_request.html_url }}" >> $GITHUB_ENV
           echo "PR_AUTHOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
-          echo "NEXT_RELEASE_TAG=${{ steps.get_latest_release.outputs.tag_name }}" >> $GITHUB_ENV
 
           # Format release notes
-          echo "* ${{ env.PR_TITLE }} - [PR Link](${{ env.PR_LINK }}) - created by ${{ env.PR_AUTHOR }}" >> release_notes.md
-
-      - name: Create new release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.NEXT_RELEASE_TAG }}
-          release_name: "KMS SaaS ${{ env.NEXT_RELEASE_TAG }}"
-          body_path: ./release_notes.md
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GIT }}
+          release_notes="* ${{ github.event.pull_request.title }} - [PR Link](${{ github.event.pull_request.html_url }}) - created by ${{ github.event.pull_request.user.login }}"
+         
